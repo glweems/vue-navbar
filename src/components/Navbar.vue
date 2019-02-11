@@ -48,17 +48,17 @@ export default {
     },
     theme: {
       type: String,
-      default: "",
+      default: "default",
       validator: function(value) {
-        return ["", "light", "dark"].indexOf(value) !== -1;
+        return ["default", "light", "dark"].indexOf(value) !== -1;
       }
     },
     type: {
       type: String,
-      default: "",
+      default: "space-evenly",
       validator: function(value) {
         return (
-          ["", "center", "space-between", "space-evenly", "scroll"].indexOf(
+          ["center", "space-between", "space-evenly", "scroll"].indexOf(
             value
           ) !== -1
         );
@@ -86,36 +86,39 @@ $font-family: "Raleway", sans-serif;
 $margin: 0.5rem;
 $padding: 0.5rem;
 
+%border {
+  border: 1px solid grey;
+}
+
 a {
   text-decoration: none;
 }
 
 #navbar {
-  background: dodgerblue;
-  a {
-    color: black;
-  }
+  margin-bottom: 1rem;
+
   width: 100%;
-  display: inline-flex;
+  // display: inline-flex;
   align-items: center;
   height: 2.5rem;
   font-family: $font-family;
 
   .navbar-brand {
+    @extend %border;
     text-align: left;
     font-weight: bold;
-    display: inline-flex;
-    margin: 0 $margin;
   }
   .nav-links {
     text-align: center;
     display: flex;
     margin: 0 auto;
+    @extend %border;
     a {
+      @extend %border;
       margin-right: 0.25rem;
-      padding: 0 $padding;
+      font-size: 16px;
     }
-    &:last-child {
+    :last-child {
       margin-right: 0;
     }
   }
@@ -123,27 +126,36 @@ a {
 
 // Nav layout classes
 .space-between {
-  background: pink;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  justify-content: space-around;
   .navbar-brand {
+    justify-self: start;
+  }
+  .nav-links {
+    justify-self: flex-end;
   }
 }
 .space-evenly {
-  justify-content: space-between;
-  .navbar-brand {
-    width: 20%;
-  }
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-gap: 10px;
   .nav-links {
+    justify-content: space-evenly;
     width: 100%;
-    justify-content: space-around;
     display: flex;
+
     a {
-      background: coral;
     }
-    // justify-content: center;
   }
 }
 
+.default {
+  background: dodgerblue;
+  a {
+    color: black;
+  }
+}
 .light {
   background: white;
   a {

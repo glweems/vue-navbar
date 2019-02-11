@@ -1,6 +1,13 @@
 <template>
   <div id="app">
+    <Navbar :brand="navbar.brand" :links="navbar.links" theme="dark" />
     <Navbar :brand="navbar.brand" :links="navbar.links" type="space-between" />
+    <Navbar
+      :brand="navbar.brand"
+      :links="navbar.links"
+      type="space-evenly"
+      theme="light"
+    />
   </div>
 </template>
 

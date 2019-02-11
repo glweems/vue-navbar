@@ -1,28 +1,37 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <Navbar :brand="navbar.brand" :links="navbar.links" />
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import Navbar from "./components/Navbar.vue";
 
 export default {
-  name: "app",
+  name: "App",
   components: {
-    HelloWorld
+    Navbar
+  },
+  data() {
+    return {
+      navbar: {
+        brand: "Nav Brand",
+        links: [
+          { path: "/", name: "Home" },
+          { path: "/", name: "About" },
+          { path: "/", name: "Contact" },
+          { path: "/", name: "Products" }
+        ]
+      }
+    };
   }
 };
 </script>
 
 <style lang="scss">
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
 }
 </style>

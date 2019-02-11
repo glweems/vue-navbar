@@ -1,13 +1,19 @@
 <template>
   <div id="navbar" :class="navSettings">
+    <!-- Navbar Brand -->
     <div class="nav-container navbar-brand">
       <a href="/">{{ brand }}</a>
     </div>
-    <nav class="nav-container nav-links">
-      <a v-for="(link, index) in links" :key="index" :href="link.path">
-        {{ link.name }}
-      </a>
-    </nav>
+    <!-- Navlinks / Dropdown-Button -->
+    <div class="nav-container">
+      <!-- <button v-if="dropdown">dropdown</button> -->
+      <!-- Nav-Links -->
+      <nav class="nav-links">
+        <a v-for="(link, index) in links" :key="index" :href="link.path">
+          {{ link.name }}
+        </a>
+      </nav>
+    </div>
   </div>
 </template>
 
@@ -55,14 +61,21 @@ export default {
     },
     type: {
       type: String,
-      default: "space-evenly",
+      default: "start",
       validator: function(value) {
         return (
-          ["center", "space-between", "space-evenly", "scroll"].indexOf(
-            value
-          ) !== -1
+          [
+            "start",
+            "center",
+            "space-between",
+            "space-evenly",
+            "scroll"
+          ].indexOf(value) !== -1
         );
       }
+    },
+    dropdown: {
+      type: Boolean
     }
   },
   data() {
@@ -81,6 +94,22 @@ export default {
 
 <style scoped lang="scss">
 @import url("https://fonts.googleapis.com/css?family=Raleway");
+
+$breakpoints: (
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1140px
+) !default;
+
+$mobile-width: 640px;
+
+@mixin mobile {
+  @media (max-width: #{$mobile-width}) {
+    @content;
+  }
+}
+
 $font-family: "Raleway", sans-serif;
 
 $margin: 0.5rem;
@@ -90,64 +119,51 @@ $padding: 0.5rem;
   border: 1px solid grey;
 }
 
-a {
-  text-decoration: none;
+%base {
+  font-family: $font-family;
+  a {
+    text-decoration: none;
+  }
 }
 
 #navbar {
-  margin-bottom: 1rem;
+  @extend %base;
+  padding: 0 0.25rem;
+  display: grid;
 
-  width: 100%;
-  // display: inline-flex;
-  align-items: center;
-  height: 2.5rem;
-  font-family: $font-family;
+  grid-template-rows: 2.5rem;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem;
 
+  .nav-container {
+    border: 1px solid salmon;
+    align-self: center; // Vertically center
+  }
   .navbar-brand {
     @extend %border;
-    text-align: left;
     font-weight: bold;
   }
+
   .nav-links {
-    text-align: center;
-    display: flex;
-    margin: 0 auto;
-    @extend %border;
     a {
-      @extend %border;
       margin-right: 0.25rem;
-      font-size: 16px;
-    }
-    :last-child {
-      margin-right: 0;
+      background: rgb(180, 180, 179);
+
+      &:last-child {
+        margin-right: 0;
+        background: pink;
+      }
     }
   }
 }
 
 // Nav layout classes
 .space-between {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  justify-content: space-around;
-  .navbar-brand {
-    justify-self: start;
-  }
-  .nav-links {
-    justify-self: flex-end;
-  }
+  justify-items: end;
 }
-.space-evenly {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-gap: 10px;
-  .nav-links {
-    justify-content: space-evenly;
-    width: 100%;
-    display: flex;
-
-    a {
-    }
-  }
+.space-evenly .nav-links {
+  display: flex;
+  justify-content: space-around;
 }
 
 .default {

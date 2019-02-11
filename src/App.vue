@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Navbar :brand="navbar.brand" :links="navbar.links" />
+    <Navbar :brand="navbar.brand" :links="navbar.links" type="space-between" />
   </div>
 </template>
 

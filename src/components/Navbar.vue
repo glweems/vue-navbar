@@ -1,7 +1,7 @@
 <template>
   <div id="navbar" :class="navSettings">
     <div class="nav-container navbar-brand">
-      <a href="/" class="navbar-brand">{{ brand }}</a>
+      <a href="/">{{ brand }}</a>
     </div>
     <nav class="nav-container nav-links">
       <a v-for="(link, index) in links" :key="index" :href="link.path">
@@ -57,7 +57,11 @@ export default {
       type: String,
       default: "",
       validator: function(value) {
-        return ["", "center", "space-between", "scroll"].indexOf(value) !== -1;
+        return (
+          ["", "center", "space-between", "space-evenly", "scroll"].indexOf(
+            value
+          ) !== -1
+        );
       }
     }
   },
@@ -105,24 +109,41 @@ a {
   }
   .nav-links {
     text-align: center;
+    display: flex;
+    margin: 0 auto;
     a {
       margin-right: 0.25rem;
       padding: 0 $padding;
     }
     &:last-child {
+      margin-right: 0;
     }
   }
 }
 
 // Nav layout classes
 .space-between {
+  background: pink;
   justify-content: space-between;
   .navbar-brand {
   }
 }
-
-.default {
+.space-evenly {
+  justify-content: space-between;
+  .navbar-brand {
+    width: 20%;
+  }
+  .nav-links {
+    width: 100%;
+    justify-content: space-around;
+    display: flex;
+    a {
+      background: coral;
+    }
+    // justify-content: center;
+  }
 }
+
 .light {
   background: white;
   a {

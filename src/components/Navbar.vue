@@ -1,19 +1,25 @@
 <template>
   <div id="navbar" :class="navSettings">
     <!-- Navbar Brand -->
-    <div class="nav-container navbar-brand">
-      <a href="/">{{ brand }}</a>
-    </div>
+    <a href="/">{{ brand }}</a>
     <!-- Navlinks / Dropdown-Button -->
-    <div class="nav-container">
-      <!-- <button v-if="dropdown">dropdown</button> -->
-      <!-- Nav-Links -->
-      <nav class="nav-links">
-        <a v-for="(link, index) in links" :key="index" :href="link.path">
-          {{ link.name }}
-        </a>
-      </nav>
-    </div>
+    <button
+      v-if="mobileDropdown"
+      class="dropdown-button"
+      @click="toggleMobileDropdown"
+    >
+      dropdown
+    </button>
+    <nav class="nav-links">
+      <a v-for="(link, index) in links" :key="index" :href="link.path">
+        {{ link.name }}
+      </a>
+    </nav>
+    <nav v-if="showMobileLinks" class="mobile-dropdown-links">
+      <a v-for="(link, index) in links" :key="index" :href="link.path">
+        {{ link.name }}
+      </a>
+    </nav>
   </div>
 </template>
 
@@ -74,19 +80,35 @@ export default {
         );
       }
     },
-    dropdown: {
+    mobileDropdown: {
       type: Boolean
     }
   },
   data() {
-    return {};
+    return {
+      showMobileDropdown: false
+    };
   },
   computed: {
     navSettings() {
       let array = ["navbar"];
       array.push(this.theme, this.type);
-
+      if (this.mobileDropdown) {
+        array.push("has-mobile-dropdown");
+      }
       return array;
+    },
+    showMobileLinks() {
+      let show = false;
+      if (this.showMobileDropdown && this.mobileDropdown) {
+        show = true;
+      }
+      return show;
+    }
+  },
+  methods: {
+    toggleMobileDropdown() {
+      this.showMobileDropdown = !this.showMobileDropdown;
     }
   }
 };
@@ -102,10 +124,15 @@ $breakpoints: (
   xl: 1140px
 ) !default;
 
-$mobile-width: 640px;
+$mobile-width: 400px;
 
-@mixin mobile {
+@mixin mobile-max {
   @media (max-width: #{$mobile-width}) {
+    @content;
+  }
+}
+@mixin mobile-min {
+  @media (min-width: #{$mobile-width}) {
     @content;
   }
 }
@@ -123,28 +150,35 @@ $padding: 0.5rem;
   font-family: $font-family;
   a {
     text-decoration: none;
+    font-size: 16px;
   }
 }
 
-#navbar {
+button {
+  background: pink;
+  align-self: center;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
   @extend %base;
   padding: 0 0.25rem;
   display: grid;
 
   grid-template-rows: 2.5rem;
   grid-template-columns: auto 1fr;
+  align-items: center;
+  overflow: scroll;
   gap: 0.25rem;
 
-  .nav-container {
-    border: 1px solid salmon;
-    align-self: center; // Vertically center
-  }
   .navbar-brand {
     @extend %border;
     font-weight: bold;
   }
 
   .nav-links {
+    display: flex;
     a {
       margin-right: 0.25rem;
       background: rgb(180, 180, 179);
@@ -156,14 +190,49 @@ $padding: 0.5rem;
     }
   }
 }
+.has-mobile-dropdown {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  .navbar-brand {
+    justify-self: flex-start;
+  }
+  .dropdown-button {
+    justify-self: flex-end;
+  }
+  @include mobile-min {
+    .dropdown-button {
+      display: none;
+    }
+  }
+  @include mobile-max {
+    .nav-links {
+      display: none;
+    }
+  }
+}
 
 // Nav layout classes
 .space-between {
   justify-items: end;
 }
-.space-evenly .nav-links {
-  display: flex;
-  justify-content: space-around;
+.space-evenly {
+  .nav-links {
+    justify-content: space-around;
+  }
+}
+
+.mobile-dropdown-links {
+  grid-column: 1 / span 3;
+  display: grid;
+  grid-template-rows: 1fr;
+  justify-content: end;
+  a {
+    text-align: right;
+    background: pink;
+  }
+  @include mobile-min {
+    display: none;
+  }
 }
 
 .default {
